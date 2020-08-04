@@ -17,8 +17,8 @@ export const CardPreview: React.FC<Props> = ({ card }) => (
   <Container>
     <Header>
       <Title>{card.title}</Title>
-      <Meta>
-        Update {card.updatedAt}, {card.author}
+      <Meta title="Last updated">
+        {card.updatedAt}, {card.author}
       </Meta>
     </Header>
     <Body>{card.content}</Body>
@@ -31,7 +31,11 @@ const Container = styled.article`
   border-radius: 6px;
   box-shadow: 0px 6px 9px #f6f5f8;
   color: #1a1e23;
-  padding: 1.125rem 1.5rem 0.625rem 1.5rem;
+  padding: 1.5rem;
+
+  *:not(:first-child) {
+    margin-top: 1rem;
+  }
 `;
 
 const Header = styled.header`
@@ -55,5 +59,4 @@ const Meta = styled.div`
 const Body = styled.div`
   font-size: 0.9375rem;
   line-height: 1.3125rem;
-  padding: 1rem 0;
 `;
