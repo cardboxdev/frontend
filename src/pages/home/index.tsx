@@ -38,7 +38,7 @@ const cards = [
   {
     id: 1,
     title:
-      'Manage map or Set in effector store. Manage map or Set in effector store. Manage map or Set in effector store.',
+      'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit',
     updatedAt: '05:03 03.01.2',
     author: 'Sova',
     content:
@@ -54,7 +54,7 @@ const cards = [
   },
   {
     id: 3,
-    title: 'Manage map or Set in effector store',
+    title: 'Suspendisse congue quam',
     updatedAt: '05:03 03.01.2',
     author: 'Sova',
     content:
@@ -63,7 +63,7 @@ const cards = [
   {
     id: 4,
     title:
-      'Manage map or Set in effector store. Manage map or Set in effector store. Manage map or Set in effector store.',
+      'Aliquam sodales quis erat eget sagittis. Integer volutpat, massa non bibendum varius',
     updatedAt: '05:03 03.01.2',
     author: 'Sova',
     content:
@@ -71,8 +71,7 @@ const cards = [
   },
   {
     id: 5,
-    title:
-      'Manage map or Set in effector store. Manage map or Set in effector store. Manage map or Set in effector store.',
+    title: 'Integer hendrerit ex neque, in faucibus massa condimentum',
     updatedAt: '05:03 03.01.2',
     author: 'Sova',
     content:
