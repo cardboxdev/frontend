@@ -1,21 +1,44 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-// import { createInspector } from 'effector-inspector';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { ROUTES } from '@cardbox/pages/routes';
 import { Router } from 'react-router';
-import { fork, hydrate } from 'effector/fork';
-import { history } from '@cardbox/entities/navigation';
-import { root } from 'effector-root';
+import { fork, forward, root } from 'effector-root';
+import { getStart, routeWithEvent } from '@cardbox/lib/page-routing';
+import { history, historyChanged } from '@cardbox/entities/navigation';
+import { matchRoutes } from 'react-router-config';
 
 import { Application } from './application';
+import { historyInit } from '../entities/navigation';
 
-// import { LOGGER_DOMAIN_NAME } from 'effector-logger/attach';
-// createInspector({ trimDomain: LOGGER_DOMAIN_NAME });
+const routesMatched = historyChanged.map((change) => ({
+  routes: matchRoutes(ROUTES, change.pathname),
+  query: Object.fromEntries(new URLSearchParams(change.search)),
+}));
 
-hydrate(root, { values: INITIAL_STATE });
+for (const { component } of ROUTES) {
+  const startPageEvent = getStart(component);
+  if (!startPageEvent) continue;
 
-const scope = fork(root);
+  const matchedRoute = routesMatched.filterMap(({ routes, query }) => {
+    const route = routes.find(routeWithEvent(startPageEvent));
+    if (route) return { route, query };
+    return undefined;
+  });
+
+  forward({
+    from: matchedRoute,
+    to: startPageEvent.prepend(({ route, query }) => ({
+      params: route.match.params,
+      query,
+    })),
+  });
+}
+
+const scope = fork(root, { values: INITIAL_STATE });
+
+historyInit(scope);
 
 ReactDOM.hydrate(
   <HelmetProvider>
