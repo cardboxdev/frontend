@@ -3,13 +3,15 @@ import styled from 'styled-components';
 import { CardPreview, cardModel } from '@box/entities/card';
 import { ContentCenteredTemplate, UserCard } from '@box/ui';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
+import { avatarUri } from '@box/shared/constants';
 import { useStart, withStart } from '@box/lib/page-routing';
 import { useStore } from 'effector-react/ssr';
 
 import * as model from './model';
-import { avatarUri } from '../../shared/constants';
+import { paths } from '../../paths';
 
-export const CardPage = () => {
+export const CardViewPage = () => {
   useStart(model.pageLoaded);
   const card = useStore(cardModel.$currentCard);
   const isLoading = useStore(model.$pagePending);
@@ -32,12 +34,14 @@ export const CardPage = () => {
           <Sidebar>
             <UserCard user={user} />
             <Links>
-              <LinkEdit disabled href="#edit">
-                Edit card
-              </LinkEdit>
-              <LinkDelete disabled href="#delete">
-                Delete card
-              </LinkDelete>
+              {card && (
+                <LinkEdit to={paths.cardEdit(card.id)}>Edit card</LinkEdit>
+              )}
+              {card && (
+                <LinkDelete disabled to="#delete">
+                  Delete card
+                </LinkDelete>
+              )}
             </Links>
           </Sidebar>
         </Container>
@@ -46,7 +50,7 @@ export const CardPage = () => {
   );
 };
 
-withStart(model.pageLoaded, CardPage);
+withStart(model.pageLoaded, CardViewPage);
 
 const user = {
   avatar: avatarUri,
@@ -91,7 +95,7 @@ const Links = styled.div`
   }
 `;
 
-const Link = styled.a.attrs(map)<{ disabled?: boolean }>`
+const LinkBase = styled(Link).attrs(map)<{ disabled?: boolean }>`
   font-size: 0.9375rem;
   line-height: 1.1875rem;
   &:not(:hover) {
@@ -104,10 +108,10 @@ const Link = styled.a.attrs(map)<{ disabled?: boolean }>`
   }
 `;
 
-const LinkEdit = styled(Link)`
+const LinkEdit = styled(LinkBase)`
   color: #683aef;
 `;
 
-const LinkDelete = styled(Link)`
+const LinkDelete = styled(LinkBase)`
   color: #ef3a5b;
 `;

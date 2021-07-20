@@ -1,4 +1,3 @@
-import * as editorLib from '@box/lib/editor';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
 import React, {
@@ -23,7 +22,7 @@ import { navigationModel } from '@box/entities/navigation';
 import { useEvent } from 'effector-react';
 import { useMouseSelection } from '@box/lib/use-mouse-selection';
 
-type CardType = 'preview' | 'details';
+type CardType = 'item' | 'details';
 
 interface CardPreviewProps {
   card?: Card | null;
@@ -42,8 +41,8 @@ export const CardPreview = ({
   card,
   isCardInFavorite = false,
   href,
-  loading = false,
-  type = 'preview',
+  loading,
+  type = 'item',
   focusItemChanged,
 }: CardPreviewProps) => {
   const historyPush = useEvent(navigationModel.historyPush);
@@ -103,7 +102,7 @@ export const CardPreview = ({
         <AddButton ref={buttonRef} isCardToDeckAdded={isCardInFavorite} />
       </Header>
 
-      {type === 'preview' && (
+      {type === 'item' && (
         <Meta author={card.author} updatedAt={card.updatedAt} />
       )}
     </PaperContainerStyled>
@@ -116,7 +115,7 @@ const PaperContainerStyled = styled(PaperContainer)<{
   justify-content: space-between;
   overflow: hidden;
 
-  &[data-type='preview'] {
+  &[data-type='item'] {
     height: 190px;
     transition: 0.25s;
 
@@ -152,11 +151,13 @@ const Content = ({ content, title, href, type, updatedAt }: ContentProps) => {
               Update {dayjs(updatedAt).format('HH:mm DD.MM.YYYY')}
             </Text>
           </MetaStyled>
-          <Editor value={editorLib.getValueNode(content)} readOnly={true} />
+          <Editor value={content} readOnly={true} />
         </>
       )}
-      {type === 'preview' && (
-        <ContentText type={TextType.small}>{content}</ContentText>
+      {type === 'item' && (
+        <ItemEditorContainer>
+          <Editor value={content} readOnly={true} />
+        </ItemEditorContainer>
       )}
     </ContentStyled>
   );
@@ -177,14 +178,14 @@ const TitleLink = styled(Link)`
   }
 `;
 
-const ContentText = styled(Text)`
-  color: #62616d;
-  overflow: hidden;
-  text-overflow: ellipsis;
+const ItemEditorContainer = styled.div`
+  --editor-color: #62616d;
+  --editor-font-size: 15px;
+  --editor-line-height: 21px;
   -webkit-line-clamp: 3;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  white-space: pre-line;
+  max-height: 90px;
 `;
 
 const Meta = ({ author, updatedAt }: Pick<Card, 'author' | 'updatedAt'>) => (
